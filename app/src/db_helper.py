@@ -4,6 +4,10 @@ import pymysql
 import os
 import sys
 
+BASE_QUERY_STRING = """
+SELECT * FROM {db}.{table}
+WHERE 1=1"""
+
 class MySQLConn():
     def __init__(self, app, db):
         self.app = app
@@ -62,16 +66,13 @@ class MySQLConn():
         ) + condition)
 
     def exists(self, table, conditions=[]):
-        query = """
-            SELECT * FROM {db}.{table}
-            WHERE 1=1
-        """.format(db=self.db, table=table)
+        query = BASE_QUERY_STRING.format(db=self.db, table=table)
         for cond in conditions:
             query += '\nAND {cond}'.format(cond=cond)
         return len(self.query_data(query)) > 0
 
     def connect_strain_plasmid(self, strain_id, plasmid_id):
-        # if not already connected and plasmid exists connect
+        # if not already connected and plasmid exists, connect
         already_conn = self.exists("strain_plasmid", [
                 f"strain_id={strain_id}",
                 f"plasmid_id={plasmid_id}",
@@ -88,7 +89,7 @@ class MySQLConn():
             })
 
     def connect_plasmid_gene(self, plasmid_id, gene_id):
-        # if not already connected and plasmid exists connect
+        # if not already connected and gene exists, connect
         already_conn = self.exists("plasmid_gene", [
                 f"plasmid_id={plasmid_id}",
                 f"gene_id={gene_id}",
@@ -102,4 +103,50 @@ class MySQLConn():
             self.insert_into_table("plasmid_gene", {
                 "plasmid_id": plasmid_id,
                 "gene_id": gene_id,
+            })
+    
+    def add_file(self, file_name, path):
+        already_exists = self.exists("files", [
+                f"file_name='{file_name}'",
+                f"path='{path}'",
+            ])
+
+        if not already_exists:
+            self.insert_into_table("files", {
+                "file_name": file_name,
+                "path": path,
+            })
+
+    def connect_plasmid_file(self, plasmid_id, file_id):
+        # if not already connected and file exists, connect
+        already_conn = self.exists("plasmid_files", [
+                f"plasmid_id={plasmid_id}",
+                f"file_id={file_id}",
+            ])
+
+        file_exists = self.exists("files", [
+                f"file_id={file_id}",
+            ])
+
+        if not already_conn and file_exists:
+            self.insert_into_table("plasmid_files", {
+                "plasmid_id": plasmid_id,
+                "file_id": file_id,
+            })
+
+    def connect_gene_file(self, gene_id, file_id):
+        # if not already connected and file exists, connect
+        already_conn = self.exists("gene_files", [
+                f"gene_id={gene_id}",
+                f"file_id={file_id}",
+            ])
+
+        file_exists = self.exists("files", [
+                f"file_id={file_id}",
+            ])
+
+        if not already_conn and file_exists:
+            self.insert_into_table("gene_files", {
+                "gene_id": gene_id,
+                "file_id": file_id,
             })

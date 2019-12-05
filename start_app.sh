@@ -1,4 +1,4 @@
-# docker system prune -f
+docker system prune -f
 docker-compose stop
 docker-compose rm -f
 docker-compose pull

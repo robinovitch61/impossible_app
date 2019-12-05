@@ -1,0 +1,36 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>{{ title }} - {{ subtitle }} (ID: {{ zoom_id }})</h1>
+    </section>
+
+    <section class="files">
+        {% if file_path_pairs is not none %}
+            {% for file in file_path_pairs %}
+                <a href=#>{{ file[0] }}</a>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    <section class="tables">
+        {% if df_children is not none %}
+            <div id="children">
+                <h3>Associated Children</h3>
+                {{ df_children|safe }}
+            </div>
+        {% endif %}
+
+        {% if df_parents is not none %}
+            <div id="children">
+                <h3>Associated Parents</h3>
+                {{ df_parents|safe }}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

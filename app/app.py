@@ -14,7 +14,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 app = Flask(__name__)
 
 # upload folder
-app.config['UPLOAD_FOLDER'] = './static/assets/uploads'
+app.config['UPLOAD_FOLDER'] = os.environ['UPLOAD_FOLDER']
 
 # secret key for CSRF
 import os
@@ -92,7 +92,7 @@ def strain():
 
     return render_template(
         'strain.html',
-        strain=df_strain.to_html(classes='data', header="true", index=False),
+        strain=df_strain.to_html(header="true", index=False),
         strain_form=strain_form,
         strain_del_form=strain_del_form,
     )
@@ -174,7 +174,7 @@ def plasmid():
 
     return render_template(
         'plasmid.html',
-        plasmid=df_plasmid.to_html(classes='data', header="true", index=False),
+        plasmid=df_plasmid.to_html(header="true", index=False),
         plasmid_form=plasmid_form,
         plasmid_del_form=plasmid_del_form,
         plasmid_file_form=plasmid_file_form,
@@ -245,10 +245,42 @@ def gene():
 
     return render_template(
         'gene.html',
-        gene=df_gene.to_html(classes='data', header="true", index=False),
+        gene=df_gene.to_html(header="true", index=False),
         gene_form=gene_form,
         gene_del_form=gene_del_form,
         gene_file_form=gene_file_form,
+    )
+
+@app.route('/strain/<strain_id>', methods=("GET", "POST"))
+def strain_view(strain_id):
+    # deliver:
+    # - id and subtitle (description)
+    # - table of associated children (plasmids)
+    # - table of associated parents (N/A)
+    # - list of associated file names and paths (N/A)
+
+    description = db.query_data(
+        "SELECT description FROM {db}.strain WHERE strain_id = {id}".format(
+            db=db.db,
+            id=strain_id,
+        )).description.values[0]
+    
+    df_plasmids = db.query_data("""
+        SELECT * FROM {db}.plasmid
+        WHERE plasmid_id IN (
+            SELECT plasmid_id FROM {db}.strain_plasmid
+            WHERE strain_id = {id}
+        )
+    """.format(db=db.db, id=strain_id))
+
+    return render_template(
+        "zoom_view.html",
+        title="Strain " + str(strain_id),
+        zoom_id=strain_id,
+        subtitle=description,
+        df_children=df_plasmids.to_html(header="true", index=False),
+        df_parents=None,
+        file_path_pairs=None,
     )
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import os
 import random
+import glob
 
 def bootstrap(db_name):
     cnx = mysql.connector.connect(
@@ -62,12 +63,19 @@ def bootstrap(db_name):
         "  PRIMARY KEY (`plasmid_gene_id`)"
         ") ENGINE=InnoDB")
 
+    TABLES['files'] = (
+        "CREATE TABLE `files` ("
+        "  `file_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `file_name` text NOT NULL,"
+        "  `path` text NOT NULL,"
+        "  PRIMARY KEY (`file_id`)"
+        ") ENGINE=InnoDB")
+
     TABLES['plasmid_files'] = (
         "CREATE TABLE `plasmid_files` ("
         "  `plasmid_files_id` int(11) NOT NULL AUTO_INCREMENT,"
         "  `plasmid_id` int(11) NOT NULL,"
-        "  `file_name` text NOT NULL,"
-        "  `path` text NOT NULL,"
+        "  `file_id` int(11) NOT NULL,"
         "  PRIMARY KEY (`plasmid_files_id`)"
         ") ENGINE=InnoDB")
 
@@ -75,8 +83,7 @@ def bootstrap(db_name):
         "CREATE TABLE `gene_files` ("
         "  `gene_files_id` int(11) NOT NULL AUTO_INCREMENT,"
         "  `gene_id` int(11) NOT NULL,"
-        "  `file_name` text NOT NULL,"
-        "  `path` text NOT NULL,"
+        "  `file_id` int(11) NOT NULL,"
         "  PRIMARY KEY (`gene_files_id`)"
         ") ENGINE=InnoDB")
 
@@ -119,6 +126,9 @@ def populate(db):
     NUM_STRAINS = 4
     NUM_PLASMIDS = 6
     NUM_GENES = 10
+    DEFAULT_FILENAMES = glob.glob(os.environ['UPLOAD_FOLDER'] + "/*")
+    NUM_DEF_FILES = len(DEFAULT_FILENAMES)
+    # db.debug(repr(DEFAULT_FILENAMES))
 
     if not db.exists("strain"):
         strain_ids = list(range(NUM_STRAINS))
@@ -184,5 +194,33 @@ def populate(db):
         for plasmid_id in range(NUM_PLASMIDS):
             for gene_id in range(random.randint(2, NUM_GENES)):
                 db.connect_strain_plasmid(plasmid_id, gene_id)
+    
+    if not db.exists('files'):
+        for path in DEFAULT_FILENAMES:
+            file_name = path.split(os.path.sep)[-1]
+            db.add_file(file_name, path)
 
+    if not db.exists('plasmid_files'):
+        # randomly associate between 0 and NUM_DEF_FILES files with each plasmid
+        for plasmid_id in range(NUM_PLASMIDS):
+            file_ids = []
+            for _ in range(random.randint(0, NUM_DEF_FILES)):
+                file_id = random.randint(0, NUM_DEF_FILES)
+                while file_id in file_ids:
+                    file_id = random.randint(0, NUM_DEF_FILES)
+                file_ids.append(file_id)
+                db.connect_plasmid_file(plasmid_id, file_id)
+
+    if not db.exists('gene_files'):
+        # randomly associate between 0 and NUM_DEF_FILES files with each gene
+        for gene_id in range(NUM_GENES):
+            file_ids = []
+            for _ in range(random.randint(0, NUM_DEF_FILES)):
+                file_id = random.randint(0, NUM_DEF_FILES)
+                while file_id in file_ids:
+                    file_id = random.randint(0, NUM_DEF_FILES)
+                file_ids.append(file_id)
+                db.connect_gene_file(gene_id, file_id)
+    
+    
 
