@@ -1,4 +1,6 @@
 from flask_wtf import FlaskForm
+from wtforms import MultipleFileField
+from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import StringField, DateField, SubmitField
 from wtforms.validators import DataRequired
 
@@ -36,3 +38,7 @@ class GeneAddForm(FlaskForm):
 class GeneDeleteForm(FlaskForm):
     gene_id = StringField('Gene ID To Delete:', validators=[DataRequired()])
     submit = SubmitField('Delete Gene')
+
+class UploadForm(FlaskForm):
+    files = MultipleFileField()
+    submit = SubmitField('Upload')

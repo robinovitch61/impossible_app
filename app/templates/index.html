@@ -13,11 +13,13 @@
     </head>
 
     <body>
+        {% block content %}
         <section class="header">
             <h1>Microbial Strains</h1>
             <h2>View, generate, connect and upload Strains, Plasmids, and Genes</h2>
         </section>
 
+        <!-- Strain -->
         <section class="tables">
             <div id="strain">
                 <div class="data-table">
@@ -26,51 +28,52 @@
                 </div>
 
                 <div class="text-controls">
-                    {% block strain %}
-                        <div class="edit-form">
-                            {% include 'add_strain.html' %}
-                        </div>
-                        <div class="edit-form">
-                            {% include 'delete_strain.html' %}
-                        </div>
-                    {% endblock %}
+                    <div class="edit-form">
+                        {% include 'add_strain.html' %}
+                    </div>
+                    <div class="edit-form">
+                        {% include 'delete_strain.html' %}
+                    </div>
                 </div>
             </div>
 
+            <!-- Plasmid -->
             <div id="plasmid">
                 <h3>Plasmid</h3>
                 {{ plasmid|safe }}
             </div>
 
             <div class="text-controls">
-                {% block plasmid %}
-                    <div class="edit-form">
-                        {% include 'add_plasmid.html' %}
-                    </div>
-                    <div class="edit-form">
-                        {% include 'delete_plasmid.html' %}
-                    </div>
-                {% endblock %}
+                <div class="edit-form">
+                    {% include 'add_plasmid.html' %}
+                </div>
+                <div class="edit-form">
+                    {% include 'delete_plasmid.html' %}
+                </div>
+            </div>
+
+            <div class="upload">
+                {% include 'upload_plasmid.html' %}
             </div>
             
+            <!-- Gene -->
             <div id="gene">
                 <h3>Gene</h3>
                 {{ gene|safe }}
             </div>
 
             <div class="text-controls">
-                {% block gene %}
-                    <div class="edit-form">
-                        {% include 'add_gene.html' %}
-                    </div>
-                    <div class="edit-form">
-                        {% include 'delete_gene.html' %}
-                    </div>
-                {% endblock %}
+                <div class="edit-form">
+                    {% include 'add_gene.html' %}
+                </div>
+                <div class="edit-form">
+                    {% include 'delete_gene.html' %}
+                </div>
             </div>
         </section>
 
         </div>
+        {% endblock %}
     </body>
 
 </html>

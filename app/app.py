@@ -2,17 +2,21 @@ import mysql.connector
 import os
 from src.db_bootstrap import bootstrap
 from src.db_helper import MySQLConn
-from src.forms import StrainAddForm, StrainDeleteForm, PlasmidAddForm, PlasmidDeleteForm, GeneAddForm, GeneDeleteForm
+from src.forms import StrainAddForm, StrainDeleteForm, PlasmidAddForm, PlasmidDeleteForm, GeneAddForm, GeneDeleteForm, UploadForm
 from sqlalchemy import create_engine
 import pymysql
 import pandas as pd
 import logging
+from werkzeug import secure_filename
 
 from flask import Flask
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 app = Flask(__name__)
 
-# secret key
+# upload folder
+app.config['UPLOAD_FOLDER'] = './static/assets/uploads'
+
+# secret key for CSRF
 import os
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
@@ -65,8 +69,22 @@ def index():
         db.remove_from_table('plasmid', 'plasmid_id = {}'.format(plasmid_id))
         return redirect('/')
 
+    # upload files for plasmid
+    plasmid_file_form = UploadForm(request.form)
+    if plasmid_file_form.validate_on_submit():
+        file_names = request.files.getlist(plasmid_file_form.files.name)
+        all_files = []
+        app.logger.debug(file_names)
+        for _file in file_names:
+            file_name = secure_filename(_file.filename)
+            full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+            all_files.append(full_path)
+            _file.save(full_path)
+        app.logger.debug(all_files)
+        return redirect('/')
+    
     # add gene
-    gene_form = GeneAddForm(request.form)    
+    gene_form = GeneAddForm(request.form)
     if gene_form.validate_on_submit():
         data = {
             'description': gene_form.description.data,
@@ -98,9 +116,9 @@ def index():
         strain_del_form=strain_del_form,
         plasmid_form=plasmid_form,
         plasmid_del_form=plasmid_del_form,
+        plasmid_file_form=plasmid_file_form,
         gene_form=gene_form,
         gene_del_form=gene_del_form,
-
     )
 
 if __name__ == '__main__':

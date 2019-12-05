@@ -59,6 +59,9 @@ def bootstrap(db_name):
         "  PRIMARY KEY (`plasmid_id`)"
         ") ENGINE=InnoDB")
 
+        # strain_id, filename, path
+        # plasmid_id, filename, path
+
     def create_database(cursor):
         try:
             cursor.execute(
