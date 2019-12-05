@@ -1,0 +1,51 @@
+<form method="POST" action="">
+    {{ gene_form.hidden_tag() }}
+    <h4>Add Gene</h4>
+
+    <div class="form-field">{{ gene_form.description.label }} {{ gene_form.description }}</div>
+    {% if gene_form.description.errors %}
+        <ul class="errors">
+            {% for error in gene_form.description.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ gene_form.dna_seq.label }} {{ gene_form.dna_seq }}</div>
+    {% if gene_form.dna_seq.errors %}
+        <ul class="errors">
+            {% for error in gene_form.dna_seq.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ gene_form.created_by.label }} {{ gene_form.created_by }}</div>
+    {% if gene_form.created_by.errors %}
+        <ul class="errors">
+            {% for error in gene_form.created_by.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ gene_form.creation_date.label }} {{ gene_form.creation_date }}</div>
+    {% if gene_form.creation_date.errors %}
+        <ul class="errors">
+            {% for error in gene_form.creation_date.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ gene_form.notes.label }} {{ gene_form.notes }}</div>
+    {% if gene_form.notes.errors %}
+        <ul class="errors">
+            {% for error in gene_form.notes.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <div class="form-field"> {{ gene_form.submit }}</div>
+</form>

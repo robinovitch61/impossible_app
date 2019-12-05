@@ -14,6 +14,7 @@ def bootstrap(db_name):
     TABLES['strain'] = (
         "CREATE TABLE `strain` ("
         "  `strain_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `description` text DEFAULT NULL,"
         "  `created_by` varchar(100) DEFAULT NULL,"
         "  `creation_date` date NOT NULL,"
         "  `notes` text DEFAULT NULL,"
@@ -23,12 +24,12 @@ def bootstrap(db_name):
     TABLES['plasmid'] = (
         "CREATE TABLE `plasmid` ("
         "  `plasmid_id` int(11) NOT NULL AUTO_INCREMENT,"
-        "  `insert` varchar(500) NULL,"
+        "  `_insert` varchar(500) NULL,"
         "  `promoter` varchar(500) NULL,"
         "  `created_by` varchar(100) DEFAULT NULL,"
         "  `creation_date` date NOT NULL,"
         "  `notes` text DEFAULT NULL,"
-        "  `files` text DEFAULT NULL,"
+        # "  `files` text DEFAULT NULL,"
         "  PRIMARY KEY (`plasmid_id`)"
         ") ENGINE=InnoDB")
 
@@ -40,7 +41,7 @@ def bootstrap(db_name):
         "  `created_by` varchar(100) DEFAULT NULL,"
         "  `creation_date` date NOT NULL,"
         "  `notes` text DEFAULT NULL,"
-        "  `files` text DEFAULT NULL,"
+        # "  `files` text DEFAULT NULL,"
         "  PRIMARY KEY (`gene_id`)"
         ") ENGINE=InnoDB")
 

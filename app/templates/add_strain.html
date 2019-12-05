@@ -1,0 +1,42 @@
+<form method="POST" action="">
+    {{ strain_form.hidden_tag() }}
+    <h4>Add Strain</h4>
+
+    <div class="form-field">{{ strain_form.description.label }} {{ strain_form.description }}</div>
+    {% if strain_form.description.errors %}
+        <ul class="errors">
+            {% for error in strain_form.description.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <div class="form-field">{{ strain_form.created_by.label }} {{ strain_form.created_by }}</div>
+    {% if strain_form.created_by.errors %}
+        <ul class="errors">
+            {% for error in strain_form.created_by.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ strain_form.creation_date.label }} {{ strain_form.creation_date }}</div>
+    {% if strain_form.creation_date.errors %}
+        <ul class="errors">
+            {% for error in strain_form.creation_date.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field">{{ strain_form.notes.label }} {{ strain_form.notes }}</div>
+    {% if strain_form.notes.errors %}
+        <ul class="errors">
+            {% for error in strain_form.notes.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field"> {{ strain_form.submit }}</div>
+</form>

@@ -1,0 +1,15 @@
+<form method="POST" action="">
+<h4>Delete Strain</h4>
+{{ strain_del_form.hidden_tag() }}
+
+    <div class="form-field">{{ strain_del_form.strain_id.label }} {{ strain_del_form.strain_id }}</div>
+    {% if strain_del_form.strain_id.errors %}
+        <ul class="errors">
+            {% for error in strain_del_form.strain_id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field"> {{ strain_del_form.submit }}</div>
+</form>

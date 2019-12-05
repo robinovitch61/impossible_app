@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    font-size: 18px;
+    color: black;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    max-width: 700px;
+    padding: 3em 1em 1em;
+    margin: 0 auto;
+}
+
+.tables {
+    display: flex;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    align-items: center;
+    /* justify-content: space-evenly; */
+}
+
+.data-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-self: center; */
+}
+
+.text-controls {
+    display: flex;
+}
+
+.edit-form {
+    padding-left: 2em;
+}
+
+/* Style later: https://sarahleejane.github.io/learning/python/2015/08/09/simple-tables-in-webapps-using-flask-and-pandas-with-python.html */
+table {
+    margin: 0 1em 1em 1em;
+}
+
+h1 {
+    font-size: 4rem;
+}
+
+h2 {
+    font-size: 2rem;
+    color: grey;
+}
+
+h3 {
+    text-align: center;
+    margin: 0.1em;
+}
+
+th, td {
+    font-size: 1rem;
+    padding: 0.1em;
+    padding-right: 0.5em;
+}
+
+td {
+    text-align: center;
+}

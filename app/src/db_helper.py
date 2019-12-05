@@ -19,6 +19,8 @@ class MySQLConn():
 
     def query_data(self, query):
         '''Used when results returned'''
+        if "{db}" in query:
+            query = query.format(db=self.db)
         return pd.read_sql(query, con=self.conn)
     
     def execute(self, query):
@@ -41,6 +43,7 @@ class MySQLConn():
                 vals += 'NULL,'
 
         query = insert_str+colnames[:-1]+') VALUES '+vals[:-1]+')'
+        self.debug("\n" + query + "\n")
         self.execute(query)
     
     def remove_from_table(self, table, condition):

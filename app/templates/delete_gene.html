@@ -1,0 +1,15 @@
+<form method="POST" action="">
+<h4>Delete Gene</h4>
+{{ gene_del_form.hidden_tag() }}
+
+    <div class="form-field">{{ gene_del_form.gene_id.label }} {{ gene_del_form.gene_id }}</div>
+    {% if gene_del_form.gene_id.errors %}
+        <ul class="errors">
+            {% for error in gene_del_form.gene_id.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="form-field"> {{ gene_del_form.submit }}</div>
+</form>
