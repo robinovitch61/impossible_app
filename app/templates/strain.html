@@ -1,0 +1,24 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}
+    Strains
+{% endblock %}
+
+{% block content %}
+    <section class="tables">
+        <div id="strain">
+            <h3>Strain Data</h3>
+            {{ strain|safe }}
+        </div>
+
+        <div class="text-controls">
+            <div class="edit-form">
+                {% include 'add_strain.html' %}
+            </div>
+            <div class="edit-form">
+                {% include 'delete_strain.html' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Plasmids
+{% endblock %}
+
+{% block content %}
+    <section class="tables">
+        <div id="plasmid">
+            <h3>Plasmid Data</h3>
+            {{ plasmid|safe }}
+        </div>
+
+        <div class="text-controls">
+            <div class="edit-form">
+                {% include 'add_plasmid.html' %}
+            </div>
+            <div class="edit-form">
+                {% include 'delete_plasmid.html' %}
+            </div>
+        </div>
+
+        <div class="upload">
+            {% include 'upload_plasmid.html' %}
+        </div>
+    </section>
+{% endblock %}
