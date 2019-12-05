@@ -2,10 +2,10 @@
 <h4>Delete Plasmid</h4>
 {{ plasmid_del_form.hidden_tag() }}
 
-    <div class="form-field">{{ plasmid_del_form.plasmid_id.label }} {{ plasmid_del_form.plasmid_id }}</div>
-    {% if plasmid_del_form.plasmid_id.errors %}
+    <div class="form-field">{{ plasmid_del_form.plasmid_del_id.label }} {{ plasmid_del_form.plasmid_del_id }}</div>
+    {% if plasmid_del_form.plasmid_del_id.errors %}
         <ul class="errors">
-            {% for error in plasmid_del_form.plasmid_id.errors %}
+            {% for error in plasmid_del_form.plasmid_del_id.errors %}
                 <li>{{ error }}</li>
             {% endfor %}
         </ul>

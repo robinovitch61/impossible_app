@@ -23,6 +23,15 @@ class MySQLConn():
             query = query.format(db=self.db)
         return pd.read_sql(query, con=self.conn)
     
+    def get_unique_ids(self, table):
+        id_col = "{table}_id".format(table=table)
+        query = "SELECT DISTINCT {id_col} FROM {db}.{table}".format(
+            id_col=id_col,
+            table=table,
+            db=self.db
+        )
+        return self.query_data(query)[id_col].tolist()
+        
     def execute(self, query):
         '''Used when no results returned'''
         return self.conn.execute(query)
@@ -52,27 +61,45 @@ class MySQLConn():
             table=table,
         ) + condition)
 
+    def exists(self, table, conditions=[]):
+        query = """
+            SELECT * FROM {db}.{table}
+            WHERE 1=1
+        """.format(db=self.db, table=table)
+        for cond in conditions:
+            query += '\nAND {cond}'.format(cond=cond)
+        return len(self.query_data(query)) > 0
 
-def add_strain():
-    pass
+    def connect_strain_plasmid(self, strain_id, plasmid_id):
+        # if not already connected and plasmid exists connect
+        already_conn = self.exists("strain_plasmid", [
+                f"strain_id={strain_id}",
+                f"plasmid_id={plasmid_id}",
+            ])
 
-def add_plasmid():
-    pass
+        plasmid_exists = self.exists("plasmid", [
+                f"plasmid_id={plasmid_id}",
+            ])
 
-def add_gene():
-    pass
+        if not already_conn and plasmid_exists:
+            self.insert_into_table("strain_plasmid", {
+                "strain_id": strain_id,
+                "plasmid_id": plasmid_id,
+            })
 
-def query_strain():
-    pass
+    def connect_plasmid_gene(self, plasmid_id, gene_id):
+        # if not already connected and plasmid exists connect
+        already_conn = self.exists("plasmid_gene", [
+                f"plasmid_id={plasmid_id}",
+                f"gene_id={gene_id}",
+            ])
 
-def query_plasmid():
-    pass
+        gene_exists = self.exists("gene", [
+                f"gene_id={gene_id}",
+            ])
 
-def query_gene():
-    pass
-
-def connect_strain_plasmid():
-    pass
-
-def connect_plasmid_gene():
-    pass
+        if not already_conn and gene_exists:
+            self.insert_into_table("plasmid_gene", {
+                "plasmid_id": plasmid_id,
+                "gene_id": gene_id,
+            })

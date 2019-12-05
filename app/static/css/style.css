@@ -24,16 +24,7 @@ body {
 .tables {
     display: flex;
     flex-direction: column;
-    /* flex-wrap: wrap; */
     align-items: center;
-    /* justify-content: space-evenly; */
-}
-
-.data-table {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* align-self: center; */
 }
 
 .text-controls {

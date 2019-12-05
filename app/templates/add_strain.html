@@ -2,41 +2,35 @@
     {{ strain_form.hidden_tag() }}
     <h4>Add Strain</h4>
 
+    <div class="form-field">{{ strain_form.strain_id.label }} {{ strain_form.strain_id }}</div>
+    {% for error in strain_form.strain_id.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+
     <div class="form-field">{{ strain_form.description.label }} {{ strain_form.description }}</div>
-    {% if strain_form.description.errors %}
-        <ul class="errors">
-            {% for error in strain_form.description.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in strain_form.description.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
     
     <div class="form-field">{{ strain_form.created_by.label }} {{ strain_form.created_by }}</div>
-    {% if strain_form.created_by.errors %}
-        <ul class="errors">
-            {% for error in strain_form.created_by.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in strain_form.created_by.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field">{{ strain_form.creation_date.label }} {{ strain_form.creation_date }}</div>
-    {% if strain_form.creation_date.errors %}
-        <ul class="errors">
-            {% for error in strain_form.creation_date.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in strain_form.creation_date.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field">{{ strain_form.notes.label }} {{ strain_form.notes }}</div>
-    {% if strain_form.notes.errors %}
-        <ul class="errors">
-            {% for error in strain_form.notes.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in strain_form.notes.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+
+    <div class="form-field">{{ strain_form.plasmid_ids.label }} {{ strain_form.plasmid_ids }}</div>
+    {% for error in strain_form.plasmid_ids.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field"> {{ strain_form.submit }}</div>
 </form>

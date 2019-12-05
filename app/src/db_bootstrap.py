@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 import os
+import random
 
 def bootstrap(db_name):
     cnx = mysql.connector.connect(
@@ -13,7 +14,7 @@ def bootstrap(db_name):
     TABLES = {}
     TABLES['strain'] = (
         "CREATE TABLE `strain` ("
-        "  `strain_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `strain_id` int(11) NOT NULL,"
         "  `description` text DEFAULT NULL,"
         "  `created_by` varchar(100) DEFAULT NULL,"
         "  `creation_date` date NOT NULL,"
@@ -23,7 +24,7 @@ def bootstrap(db_name):
 
     TABLES['plasmid'] = (
         "CREATE TABLE `plasmid` ("
-        "  `plasmid_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `plasmid_id` int(11) NOT NULL,"
         "  `_insert` varchar(500) NULL,"
         "  `promoter` varchar(500) NULL,"
         "  `created_by` varchar(100) DEFAULT NULL,"
@@ -35,7 +36,7 @@ def bootstrap(db_name):
 
     TABLES['gene'] = (
         "CREATE TABLE `gene` ("
-        "  `gene_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `gene_id` int(11) NOT NULL,"
         "  `description` text DEFAULT NULL,"
         "  `dna_seq` text DEFAULT NULL,"
         "  `created_by` varchar(100) DEFAULT NULL,"
@@ -47,20 +48,37 @@ def bootstrap(db_name):
 
     TABLES['strain_plasmid'] = (
         "CREATE TABLE `strain_plasmid` ("
+        "  `strain_plasmid_id` int(11) NOT NULL AUTO_INCREMENT,"
         "  `strain_id` int(11) NOT NULL,"
         "  `plasmid_id` int(11) NOT NULL,"
-        "  PRIMARY KEY (`strain_id`)"
+        "  PRIMARY KEY (`strain_plasmid_id`)"
         ") ENGINE=InnoDB")
 
     TABLES['plasmid_gene'] = (
         "CREATE TABLE `plasmid_gene` ("
+        "  `plasmid_gene_id` int(11) NOT NULL AUTO_INCREMENT,"
         "  `plasmid_id` int(11) NOT NULL,"
         "  `gene_id` int(11) NOT NULL,"
-        "  PRIMARY KEY (`plasmid_id`)"
+        "  PRIMARY KEY (`plasmid_gene_id`)"
         ") ENGINE=InnoDB")
 
-        # strain_id, filename, path
-        # plasmid_id, filename, path
+    TABLES['plasmid_files'] = (
+        "CREATE TABLE `plasmid_files` ("
+        "  `plasmid_files_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `plasmid_id` int(11) NOT NULL,"
+        "  `file_name` text NOT NULL,"
+        "  `path` text NOT NULL,"
+        "  PRIMARY KEY (`plasmid_files_id`)"
+        ") ENGINE=InnoDB")
+
+    TABLES['gene_files'] = (
+        "CREATE TABLE `gene_files` ("
+        "  `gene_files_id` int(11) NOT NULL AUTO_INCREMENT,"
+        "  `gene_id` int(11) NOT NULL,"
+        "  `file_name` text NOT NULL,"
+        "  `path` text NOT NULL,"
+        "  PRIMARY KEY (`gene_files_id`)"
+        ") ENGINE=InnoDB")
 
     def create_database(cursor):
         try:
@@ -95,3 +113,76 @@ def bootstrap(db_name):
 
     cursor.close()
     cnx.close()
+
+def populate(db):
+
+    NUM_STRAINS = 4
+    NUM_PLASMIDS = 6
+    NUM_GENES = 10
+
+    if not db.exists("strain"):
+        strain_ids = list(range(NUM_STRAINS))
+        strain_descriptions = ["strain_"+str(_id) for _id in strain_ids]
+        strain_created_bys = ["Sample" for _ in range(len(strain_ids))]
+        strain_creation_dates = ["2019-01-"+str(_id+10) for _id in strain_ids]
+        strain_notes = ["notes_"+str(_id) for _id in strain_ids]
+
+        for ii in range(len(strain_ids)):
+            db.insert_into_table('strain', {
+                'strain_id': strain_ids[ii],
+                'description': strain_descriptions[ii],
+                'created_by': strain_created_bys[ii],
+                'creation_date': strain_creation_dates[ii],
+                'notes': strain_notes[ii],
+            })
+
+    if not db.exists("plasmid"):
+        plasmid_ids = list(range(NUM_PLASMIDS))
+        plasmid_inserts = ["insert_"+str(_id) for _id in plasmid_ids]
+        plasmid_promoter = ["promoter_"+str(_id) for _id in plasmid_ids]
+        plasmid_created_bys = ["Sample" for _ in range(len(plasmid_ids))]
+        plasmid_creation_dates = ["2019-01-"+str(_id+10) for _id in plasmid_ids]
+        plasmid_notes = ["notes_"+str(_id) for _id in plasmid_ids]
+
+        for ii in range(len(plasmid_ids)):
+            db.insert_into_table('plasmid', {
+                'plasmid_id': plasmid_ids[ii],
+                '_insert': plasmid_inserts[ii],
+                'promoter': plasmid_promoter[ii],
+                'created_by': plasmid_created_bys[ii],
+                'creation_date': plasmid_creation_dates[ii],
+                'notes': plasmid_notes[ii],
+            })
+
+    if not db.exists("gene"):
+        gene_ids = list(range(NUM_GENES))
+        gene_descriptions = ["gene_"+str(_id) for _id in gene_ids]
+        gene_dna_seqs = ["dna_seq_"+str(_id) for _id in gene_ids]
+        gene_created_bys = ["Sample" for _ in range(len(gene_ids))]
+        gene_creation_dates = ["2019-01-"+str(_id+10) for _id in gene_ids]
+        gene_notes = ["notes_"+str(_id) for _id in gene_ids]
+
+        for ii in range(len(gene_ids)):
+            db.insert_into_table('gene', {
+                'gene_id': gene_ids[ii],
+                'description': gene_descriptions[ii],
+                'dna_seq': gene_dna_seqs[ii],
+                'created_by': gene_created_bys[ii],
+                'creation_date': gene_creation_dates[ii],
+                'notes': gene_notes[ii],
+            })
+
+    if not db.exists("strain_plasmid"):
+        # randomly connect each strain with 2 to NUM_PLASMIDS plasmids
+        for strain_id in range(NUM_STRAINS):
+            for plasmid_id in range(random.randint(2, NUM_PLASMIDS)):
+                db.connect_strain_plasmid(strain_id, plasmid_id)
+
+
+    if not db.exists("plasmid_gene"):
+        # randomly connect each plasmid with 2 to NUM_GENES genes
+        for plasmid_id in range(NUM_PLASMIDS):
+            for gene_id in range(random.randint(2, NUM_GENES)):
+                db.connect_strain_plasmid(plasmid_id, gene_id)
+
+

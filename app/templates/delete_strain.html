@@ -2,10 +2,10 @@
 <h4>Delete Strain</h4>
 {{ strain_del_form.hidden_tag() }}
 
-    <div class="form-field">{{ strain_del_form.strain_id.label }} {{ strain_del_form.strain_id }}</div>
-    {% if strain_del_form.strain_id.errors %}
+    <div class="form-field">{{ strain_del_form.strain_del_id.label }} {{ strain_del_form.strain_del_id }}</div>
+    {% if strain_del_form.strain_del_id.errors %}
         <ul class="errors">
-            {% for error in strain_del_form.strain_id.errors %}
+            {% for error in strain_del_form.strain_del_id.errors %}
                 <li>{{ error }}</li>
             {% endfor %}
         </ul>

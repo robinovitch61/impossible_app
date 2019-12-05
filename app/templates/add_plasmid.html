@@ -2,50 +2,40 @@
     {{ plasmid_form.hidden_tag() }}
     <h4>Add Plasmid</h4>
 
+    <div class="form-field">{{ plasmid_form.plasmid_id.label }} {{ plasmid_form.plasmid_id }}</div>
+    {% for error in plasmid_form.plasmid_id.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+
     <div class="form-field">{{ plasmid_form.insert.label }} {{ plasmid_form.insert }}</div>
-    {% if plasmid_form.insert.errors %}
-        <ul class="errors">
-            {% for error in plasmid_form.insert.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in plasmid_form.insert.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field">{{ plasmid_form.promoter.label }} {{ plasmid_form.promoter }}</div>
-    {% if plasmid_form.promoter.errors %}
-        <ul class="errors">
-            {% for error in plasmid_form.promoter.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in plasmid_form.promoter.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field">{{ plasmid_form.created_by.label }} {{ plasmid_form.created_by }}</div>
-    {% if plasmid_form.created_by.errors %}
-        <ul class="errors">
-            {% for error in plasmid_form.created_by.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in plasmid_form.created_by.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
 
     <div class="form-field">{{ plasmid_form.creation_date.label }} {{ plasmid_form.creation_date }}</div>
-    {% if plasmid_form.creation_date.errors %}
-        <ul class="errors">
-            {% for error in plasmid_form.creation_date.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
+    {% for error in plasmid_form.creation_date.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    
     <div class="form-field">{{ plasmid_form.notes.label }} {{ plasmid_form.notes }}</div>
-    {% if plasmid_form.notes.errors %}
-        <ul class="errors">
-            {% for error in plasmid_form.notes.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% for error in plasmid_form.notes.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+
+    <div class="form-field">{{ plasmid_form.gene_ids.label }} {{ plasmid_form.gene_ids }}</div>
+    {% for error in plasmid_form.gene_ids.errors %}
+        <span style="color: red;">{{ error }}</span>
+    {% endfor %}
     
     <div class="form-field"> {{ plasmid_form.submit }}</div>
 </form>
