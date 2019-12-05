@@ -29,4 +29,5 @@ services:
     restart: unless-stopped
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
+      - ./mysql_data:/var/lib/mysql
     env_file: ./.secret.env
