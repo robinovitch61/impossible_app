@@ -1,6 +1,6 @@
-pandas
-Flask
-mysql-connector-python
-sqlalchemy
-pymysql
-flask-wtf
+pandas==0.25.3
+Flask==1.1.1
+mysql-connector-python==8.0.18
+sqlalchemy==1.3.11
+pymysql==0.9.3
+flask-wtf==0.14.2
