@@ -60,10 +60,12 @@ class MySQLConn():
         self.execute(query)
     
     def remove_from_table(self, table, condition):
-        self.execute("DELETE FROM {db}.{table} WHERE ".format(
+        query = "DELETE FROM {db}.{table} WHERE ".format(
             db=self.db,
             table=table,
-        ) + condition)
+        ) + condition
+        self.debug(query)
+        self.execute(query)
 
     def exists(self, table, conditions=[]):
         query = BASE_QUERY_STRING.format(db=self.db, table=table)

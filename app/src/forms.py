@@ -42,7 +42,7 @@ class GeneAddForm(FlaskForm):
     submit = SubmitField('Add')
 
 class GeneDeleteForm(FlaskForm):
-    gene_id = StringField('Gene ID To Delete:', validators=[DataRequired()])
+    gene_del_id = StringField('Gene ID To Delete:', validators=[DataRequired()])
     submit = SubmitField('Delete')
 
 class UploadForm(FlaskForm):

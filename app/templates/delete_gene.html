@@ -2,10 +2,10 @@
 <h2>Delete Gene</h2>
 {{ gene_del_form.hidden_tag() }}
 
-    <div class="form-field">{{ gene_del_form.gene_id.label }} {{ gene_del_form.gene_id(class_='id_text') }}</div>
-    {% if gene_del_form.gene_id.errors %}
+    <div class="form-field">{{ gene_del_form.gene_del_id.label }} {{ gene_del_form.gene_del_id(class_='id_text') }}</div>
+    {% if gene_del_form.gene_del_id.errors %}
         <ul class="errors">
-            {% for error in gene_del_form.gene_id.errors %}
+            {% for error in gene_del_form.gene_del_id.errors %}
                 <li>{{ error }}</li>
             {% endfor %}
         </ul>

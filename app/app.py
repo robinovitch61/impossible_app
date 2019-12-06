@@ -53,7 +53,7 @@ def strain():
                 strain_id = 0
         elif int(strain_id) in all_ids:
             for table in ("strain", "strain_plasmid"):
-                db.remove_from_table(table, 'strain_id = {}'.format(strain_del_id))
+                db.remove_from_table(table, 'strain_id = {}'.format(strain_id))
             strain_id = int(strain_id)
         else:
             strain_id = int(strain_id)
@@ -122,8 +122,8 @@ def plasmid():
             else:
                 plasmid_id = 0
         elif int(plasmid_id) in all_ids:
-            for table in ("plasmid", "strain_plasmid", "plasmid_gene"):
-                db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_del_id))
+            for table in ("plasmid", "strain_plasmid", "plasmid_gene", "plasmid_files"):
+                db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_id))
             plasmid_id = int(plasmid_id)
         else:
             plasmid_id = int(plasmid_id)
@@ -159,7 +159,7 @@ def plasmid():
         plasmid_del_id = plasmid_del_form.plasmid_del_id.data
         # remove both plasmid info and plasmid -> plasmid info
         if plasmid_del_id.isnumeric():
-            for table in ("plasmid", "strain_plasmid", "plasmid_gene"):
+            for table in ("plasmid", "strain_plasmid", "plasmid_gene", "plasmid_files"):
                 db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_del_id))
         return redirect('/plasmid')
     
@@ -192,7 +192,7 @@ def gene():
             else:
                 gene_id = 0
         elif int(gene_id) in all_ids:
-            for table in ("gene", "plasmid_gene"):
+            for table in ("gene", "plasmid_gene", "gene_files"):
                 db.remove_from_table('gene', 'gene_id = {}'.format(gene_id))
             gene_id = int(gene_id)
         else:
@@ -214,10 +214,10 @@ def gene():
     # delete gene
     gene_del_form = GeneDeleteForm(request.form)
     if gene_del_form.validate_on_submit():
-        gene_id = gene_del_form.gene_id.data
-        if gene_id.isnumeric():
-            for table in ("gene", "plasmid_gene"):
-                db.remove_from_table('gene', 'gene_id = {}'.format(gene_id))
+        gene_del_id = gene_del_form.gene_del_id.data
+        if gene_del_id.isnumeric():
+            for table in ("gene", "plasmid_gene", "gene_files"):
+                db.remove_from_table('gene', 'gene_id = {}'.format(gene_del_id))
         return redirect('/gene')
 
     # upload files for gene
