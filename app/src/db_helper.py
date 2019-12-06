@@ -56,7 +56,6 @@ class MySQLConn():
                 vals += 'NULL,'
 
         query = insert_str+colnames[:-1]+') VALUES '+vals[:-1]+')'
-        self.debug("\n" + query + "\n")
         self.execute(query)
     
     def remove_from_table(self, table, condition):
@@ -64,7 +63,6 @@ class MySQLConn():
             db=self.db,
             table=table,
         ) + condition
-        self.debug(query)
         self.execute(query)
 
     def exists(self, table, conditions=[]):

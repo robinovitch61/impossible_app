@@ -128,7 +128,6 @@ def populate(db):
     NUM_GENES = 10
     DEFAULT_FILENAMES = glob.glob(db.app.config['UPLOAD_FOLDER'] + "/*")
     NUM_DEF_FILES = len(DEFAULT_FILENAMES)
-    # db.debug(repr(DEFAULT_FILENAMES))
 
     if not db.exists("strain"):
         strain_ids = list(range(NUM_STRAINS))

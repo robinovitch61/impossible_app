@@ -34,8 +34,6 @@ def index():
 @app.route('/strain', methods=("GET", "POST"))
 def strain():
 
-    app.logger.debug(db.query_data("SELECT * FROM {db}.strain_plasmid"))
-
     # add strain
     strain_form = StrainAddForm(request.form)
     if strain_form.validate_on_submit():
@@ -78,7 +76,6 @@ def strain():
         if len(plasmid_ids):
             for plasmid_id in plasmid_ids:
                 if plasmid_id.isnumeric():
-                    app.logger.debug(plasmid_id)
                     db.connect_strain_plasmid(strain_id, plasmid_id)
 
         return redirect('/strain')
@@ -225,13 +222,11 @@ def gene():
     if gene_file_form.validate_on_submit():
         file_names = request.files.getlist(gene_file_form.files.name)
         all_files = []
-        app.logger.debug(file_names)
         for _file in file_names:
             file_name = secure_filename(_file.filename)
             full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
             all_files.append(full_path)
             _file.save(full_path)
-        app.logger.debug(all_files)
         return redirect('/gene')
 
     df_gene = db.query_data("SELECT * FROM {db}.gene")
@@ -251,8 +246,6 @@ def strain_view(strain_id):
     # - table of associated parents (N/A)
     # - list of associated file names and paths (N/A)
     # - upload form (N/A)
-
-    app.logger.debug(db.query_data("SELECT * FROM {db}.strain_plasmid"))
 
     valid_ids = db.get_unique_ids("strain")
     if not strain_id.isnumeric() or int(strain_id) not in valid_ids:
