@@ -1,18 +1,26 @@
 <section class="header">
-    <nav class="navbar navbar-expand-sm bg-light">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link" href="/">Strains</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="/plasmid">Plasmids</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link" href="/gene">Genes</a>
-            </li>
-        </ul>
-    </nav>
-    
-    <h1>Microbial Strains App</h1>
-    <h2>View, generate, connect and upload Strains, Plasmids, and Genes</h2>
+    <div class="whole-nav">
+        <img class="logo" src={{ url_for('static', filename='assets/impossible_logo.png') }} alt="Impossible Logo">
+        
+        <div>
+            <div class="topnav">
+                <a href="/" class="header-link"><h1>Microbial Strains Navigator</h1></a>
+
+                <nav class="navbar navbar-expand-sm">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                        <a class="nav-link" href="/">Strains</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/plasmid">Plasmids</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link" href="/gene">Genes</a>
+                        </li>
+                    </ul>
+                </nav>    
+            </div>
+            <h5>View, generate, connect and upload strains, plasmids, and genes.</h5>
+        </div>
+    </div>
 </section>

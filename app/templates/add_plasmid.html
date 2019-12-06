@@ -2,7 +2,7 @@
     {{ plasmid_form.hidden_tag() }}
     <h4>Add Plasmid</h4>
 
-    <div class="form-field">{{ plasmid_form.plasmid_id.label }} {{ plasmid_form.plasmid_id }}</div>
+    <div class="form-field">{{ plasmid_form.plasmid_id.label }} {{ plasmid_form.plasmid_id(class_='id_text') }}</div>
     {% for error in plasmid_form.plasmid_id.errors %}
         <span style="color: red;">{{ error }}</span>
     {% endfor %}

@@ -15,6 +15,7 @@ services:
     environment:
         PORT: 5000
         MYSQL_PORT: 3306
+        UPLOAD_FOLDER: ./static/assets/uploads
     env_file: ./.secret.env
     depends_on:
         - mysql

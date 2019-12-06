@@ -4,6 +4,12 @@ body {
     color: black;
 }
 
+hr {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
 .container {
     max-width: 800px;
 }
@@ -13,8 +19,60 @@ body {
     align-items: flex-start;
     flex-direction: column;
     max-width: 700px;
-    padding: 3em 1em 1em;
+    padding: 1em;
     margin: 0 auto;
+}
+
+.whole-nav {
+    display: flex;
+    align-items: center;
+}
+
+.topnav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.nav-link {
+    padding: 0;
+}
+
+.logo {
+    margin: 0;
+    padding: 0;
+    width: 3rem;
+    height: 3rem;
+    margin-right: 1em;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-style: italic;
+    text-align: center;
+    margin: 0.1em;
+}
+
+.header-link {
+    color: black;
+}
+
+h2 {
+    font-size: 1.3rem;
+    text-align: center;
+    margin: 0.1em;
+}
+
+h5 {
+    color: grey;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .footer {
@@ -39,31 +97,16 @@ body {
     padding-left: 2em;
 }
 
-/* Style later: https://sarahleejane.github.io/learning/python/2015/08/09/simple-tables-in-webapps-using-flask-and-pandas-with-python.html */
-table {
-    margin: 0 1em 1em 1em;
-}
+table.dataframe, .dataframe th, .dataframe td {
+    border: none;
+    border-bottom: 2px solid #C8C8C8;
+    border-collapse: collapse;
+    text-align:left;
+    padding: 12px;
+    margin-bottom: 2em;
+    font-size: 0.95em;
+  }
 
-h1 {
-    font-size: 4rem;
-}
-
-h2 {
-    font-size: 2rem;
-    color: grey;
-}
-
-h3 {
-    text-align: center;
-    margin: 0.1em;
-}
-
-th, td {
-    font-size: 1rem;
-    padding: 0.1em;
-    padding-right: 0.5em;
-}
-
-td {
-    text-align: center;
+.id_text{
+    width: 4em;
 }

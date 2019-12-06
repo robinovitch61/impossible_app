@@ -1,8 +1,8 @@
 <form method="POST" action="">
     {{ strain_form.hidden_tag() }}
-    <h4>Add Strain</h4>
+    <h2>Add Strain</h2>
 
-    <div class="form-field">{{ strain_form.strain_id.label }} {{ strain_form.strain_id }}</div>
+    <div class="form-field">{{ strain_form.strain_id.label }} {{ strain_form.strain_id(class_='id_text') }}</div>
     {% for error in strain_form.strain_id.errors %}
         <span style="color: red;">{{ error }}</span>
     {% endfor %}

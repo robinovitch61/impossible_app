@@ -2,7 +2,7 @@
     {{ gene_form.hidden_tag() }}
     <h4>Add Gene</h4>
 
-    <div class="form-field">{{ gene_form.gene_id.label }} {{ gene_form.gene_id }}</div>
+    <div class="form-field">{{ gene_form.gene_id.label }} {{ gene_form.gene_id(class_='id_text') }}</div>
     {% for error in gene_form.gene_id.errors %}
         <span style="color: red;">{{ error }}</span>
     {% endfor %}
