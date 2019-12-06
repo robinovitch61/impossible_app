@@ -1,11 +1,16 @@
 <form method="POST" enctype="multipart/form-data" action="">
     {{ upload_form.hidden_tag() }}
-    <h4>Upload Files for {{ title }}</h4>
+    <h2>Upload Files for {{ title }}</h2>
 
-    <div class="form-field">{{ upload_form.insert }}</div>
-    {{ upload_form.files }}
-    {% for error in upload_form.files.errors %}
-        <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    {{ upload_form.submit }}
+    <div class="upload-form">
+        <div class="form-field">
+            {{ upload_form.insert }}
+        </div>
+        {{ upload_form.files }}
+        {% for error in upload_form.files.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+
+        {{ upload_form.submit }}
+    </div>
 </form>

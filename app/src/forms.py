@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import MultipleFileField
 from flask_wtf.file import FileRequired, FileAllowed
-from wtforms import StringField, DateField, SubmitField
+from wtforms import StringField, DateField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, NumberRange
 import sys
 
@@ -12,11 +12,11 @@ class StrainAddForm(FlaskForm):
     creation_date = DateField('Date:', validators=[DataRequired(message="YYYY-MM-DD")])
     notes = StringField('Notes (optional):')
     plasmid_ids = StringField('Plasmid IDs (optional), e.g. 1, 12, 14:')
-    submit = SubmitField('Add Strain')
+    submit = SubmitField('Add')
 
 class StrainDeleteForm(FlaskForm):
     strain_del_id = StringField('Strain ID To Delete:', validators=[DataRequired()])
-    submit = SubmitField('Delete Strain')
+    submit = SubmitField('Delete')
 
 class PlasmidAddForm(FlaskForm):
     plasmid_id = StringField('ID (optional, will overwrite):')
@@ -26,11 +26,11 @@ class PlasmidAddForm(FlaskForm):
     creation_date = DateField('Date:', validators=[DataRequired()])
     notes = StringField('Notes:')
     gene_ids = StringField('Gene IDs (optional), e.g. 1, 12, 14:')
-    submit = SubmitField('Add Plasmid')
+    submit = SubmitField('Add')
 
 class PlasmidDeleteForm(FlaskForm):
     plasmid_del_id = StringField('Plasmid ID To Delete:', validators=[DataRequired()])
-    submit = SubmitField('Delete Plasmid')
+    submit = SubmitField('Delete')
 
 class GeneAddForm(FlaskForm):
     gene_id = StringField('ID (optional, will overwrite):')
@@ -39,11 +39,11 @@ class GeneAddForm(FlaskForm):
     created_by = StringField('Created By:', validators=[DataRequired()])
     creation_date = DateField('Date:', validators=[DataRequired()])
     notes = StringField('Notes:')
-    submit = SubmitField('Add Gene')
+    submit = SubmitField('Add')
 
 class GeneDeleteForm(FlaskForm):
     gene_id = StringField('Gene ID To Delete:', validators=[DataRequired()])
-    submit = SubmitField('Delete Gene')
+    submit = SubmitField('Delete')
 
 class UploadForm(FlaskForm):
     files = MultipleFileField()

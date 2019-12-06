@@ -1,8 +1,8 @@
 <form method="POST" action="">
-<h4>Delete Plasmid</h4>
+<h2>Delete Plasmid</h2>
 {{ plasmid_del_form.hidden_tag() }}
 
-    <div class="form-field">{{ plasmid_del_form.plasmid_del_id.label }} {{ plasmid_del_form.plasmid_del_id }}</div>
+    <div class="form-field">{{ plasmid_del_form.plasmid_del_id.label }} {{ plasmid_del_form.plasmid_del_id(class_='id_text') }}</div>
     {% if plasmid_del_form.plasmid_del_id.errors %}
         <ul class="errors">
             {% for error in plasmid_del_form.plasmid_del_id.errors %}
@@ -11,5 +11,7 @@
         </ul>
     {% endif %}
 
-    <div class="form-field"> {{ plasmid_del_form.submit }}</div>
+    <div class="submit">
+        <div class="form-field"> {{ plasmid_del_form.submit(class_='btn-submit') }}</div>
+    </div>
 </form>

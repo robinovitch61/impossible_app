@@ -2,7 +2,7 @@
 <h2>Delete Strain</h2>
 {{ strain_del_form.hidden_tag() }}
 
-    <div class="form-field">{{ strain_del_form.strain_del_id.label }} {{ strain_del_form.strain_del_id }}</div>
+    <div class="form-field">{{ strain_del_form.strain_del_id.label }} {{ strain_del_form.strain_del_id(class_='id_text') }}</div>
     {% if strain_del_form.strain_del_id.errors %}
         <ul class="errors">
             {% for error in strain_del_form.strain_del_id.errors %}
@@ -11,5 +11,7 @@
         </ul>
     {% endif %}
 
-    <div class="form-field"> {{ strain_del_form.submit }}</div>
+    <div class="submit">
+        <div class="form-field"> {{ strain_del_form.submit(class_='btn-submit') }}</div>
+    </div>
 </form>
