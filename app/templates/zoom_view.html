@@ -16,7 +16,7 @@
     
     <section class="files">
         {% if file_path_pairs is not none %}
-            <h3>Associated Files:</h3>
+            <h3>Associated Files (click to download):</h3>
             <ul>
                 {% for file in file_path_pairs %}
                 <li><a href={{ url_for('static', filename=file[1].replace('./static/', '')) }} download>{{ file[0] }}</a></li>
