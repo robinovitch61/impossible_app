@@ -1,4 +1,5 @@
 *.env
+app/__pycache__
 .vscode
 mysql_data
 app/static/assets/uploads
