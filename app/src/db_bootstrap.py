@@ -126,7 +126,7 @@ def populate(db):
     NUM_STRAINS = 4
     NUM_PLASMIDS = 6
     NUM_GENES = 10
-    DEFAULT_FILENAMES = glob.glob(os.environ['UPLOAD_FOLDER'] + "/*")
+    DEFAULT_FILENAMES = glob.glob(db.app.config['UPLOAD_FOLDER'] + "/*")
     NUM_DEF_FILES = len(DEFAULT_FILENAMES)
     # db.debug(repr(DEFAULT_FILENAMES))
 
@@ -186,7 +186,7 @@ def populate(db):
         # randomly connect each strain with 2 to NUM_PLASMIDS plasmids
         for strain_id in range(NUM_STRAINS):
             plasmid_ids = []
-            for _ in range(random.randint(0, NUM_PLASMIDS)):
+            for _ in range(random.randint(2, NUM_PLASMIDS)):
                 plasmid_id = random.randint(0, NUM_PLASMIDS)
                 while plasmid_id in plasmid_ids:
                     plasmid_id = random.randint(0, NUM_PLASMIDS)
@@ -197,7 +197,7 @@ def populate(db):
         # randomly connect each plasmid with 2 to NUM_GENES genes
         for plasmid_id in range(NUM_PLASMIDS):
             gene_ids = []
-            for _ in range(random.randint(0, NUM_GENES)):
+            for _ in range(random.randint(2, NUM_GENES)):
                 gene_id = random.randint(0, NUM_GENES)
                 while gene_id in gene_ids:
                     gene_id = random.randint(0, NUM_GENES)
@@ -210,10 +210,10 @@ def populate(db):
             db.add_file(file_name, path)
 
     if not db.exists('plasmid_files'):
-        # randomly associate between 0 and NUM_DEF_FILES files with each plasmid
+        # randomly associate between 1 and NUM_DEF_FILES files with each plasmid
         for plasmid_id in range(NUM_PLASMIDS):
             file_ids = []
-            for _ in range(random.randint(0, NUM_DEF_FILES)):
+            for _ in range(random.randint(1, NUM_DEF_FILES)):
                 file_id = random.randint(0, NUM_DEF_FILES)
                 while file_id in file_ids:
                     file_id = random.randint(0, NUM_DEF_FILES)
@@ -221,10 +221,10 @@ def populate(db):
                 db.connect_plasmid_file(plasmid_id, file_id)
 
     if not db.exists('gene_files'):
-        # randomly associate between 0 and NUM_DEF_FILES files with each gene
+        # randomly associate between 1 and NUM_DEF_FILES files with each gene
         for gene_id in range(NUM_GENES):
             file_ids = []
-            for _ in range(random.randint(0, NUM_DEF_FILES)):
+            for _ in range(random.randint(1, NUM_DEF_FILES)):
                 file_id = random.randint(0, NUM_DEF_FILES)
                 while file_id in file_ids:
                     file_id = random.randint(0, NUM_DEF_FILES)

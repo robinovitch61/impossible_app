@@ -19,7 +19,7 @@
             <h3>Associated Files:</h3>
             <ul>
                 {% for file in file_path_pairs %}
-                <li><a href=#>{{ file[0] }}</a></li>
+                <li><a href={{ url_for('static', filename=file[1].replace('./static/', '')) }} download>{{ file[0] }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}

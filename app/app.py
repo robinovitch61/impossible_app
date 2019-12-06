@@ -87,9 +87,10 @@ def strain():
     strain_del_form = StrainDeleteForm(request.form)
     if strain_del_form.validate_on_submit():
         strain_del_id = strain_del_form.strain_del_id.data
-        # remove both strain info and strain -> plasmid info
-        for table in ("strain", "strain_plasmid"):
-            db.remove_from_table(table, 'strain_id = {}'.format(strain_del_id))
+        if strain_del_id.isnumeric():
+            # remove both strain info and strain -> plasmid info
+            for table in ("strain", "strain_plasmid"):
+                db.remove_from_table(table, 'strain_id = {}'.format(strain_del_id))
         return redirect('/strain')
 
     df_strain = db.query_data("SELECT * FROM {db}.strain")
@@ -157,8 +158,9 @@ def plasmid():
     if plasmid_del_form.validate_on_submit():
         plasmid_del_id = plasmid_del_form.plasmid_del_id.data
         # remove both plasmid info and plasmid -> plasmid info
-        for table in ("plasmid", "strain_plasmid", "plasmid_gene"):
-            db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_del_id))
+        if plasmid_del_id.isnumeric():
+            for table in ("plasmid", "strain_plasmid", "plasmid_gene"):
+                db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_del_id))
         return redirect('/plasmid')
     
     df_plasmid = db.query_data("SELECT * FROM {db}.plasmid")
@@ -213,8 +215,9 @@ def gene():
     gene_del_form = GeneDeleteForm(request.form)
     if gene_del_form.validate_on_submit():
         gene_id = gene_del_form.gene_id.data
-        for table in ("gene", "plasmid_gene"):
-            db.remove_from_table('gene', 'gene_id = {}'.format(gene_id))
+        if gene_id.isnumeric():
+            for table in ("gene", "plasmid_gene"):
+                db.remove_from_table('gene', 'gene_id = {}'.format(gene_id))
         return redirect('/gene')
 
     # upload files for gene
@@ -300,8 +303,8 @@ def plasmid_view(plasmid_id):
         for _file in file_names:
             file_name = secure_filename(_file.filename)
             full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
-            _file.save(full_path)
             db.add_file(file_name, full_path)
+            _file.save(full_path)
             file_id = db.get_file_id(full_path)
             db.connect_plasmid_file(plasmid_id, file_id)
         return redirect('/plasmid/{id}'.format(id=plasmid_id))
@@ -340,6 +343,7 @@ def plasmid_view(plasmid_id):
     files = df_files.file_name.tolist()
     paths = df_files.path.tolist()
     file_path_pairs = [(f, p) for f, p in zip(files, paths)]
+    if not len(file_path_pairs): file_path_pairs = None
 
     return render_template(
         "zoom_view.html",
@@ -372,8 +376,8 @@ def gene_view(gene_id):
         for _file in file_names:
             file_name = secure_filename(_file.filename)
             full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
-            _file.save(full_path)
             db.add_file(file_name, full_path)
+            _file.save(full_path)
             file_id = db.get_file_id(full_path)
             db.connect_gene_file(gene_id, file_id)
         return redirect('/gene/{id}'.format(id=gene_id))
@@ -402,6 +406,7 @@ def gene_view(gene_id):
     files = df_files.file_name.tolist()
     paths = df_files.path.tolist()
     file_path_pairs = [(f, p) for f, p in zip(files, paths)]
+    if not len(file_path_pairs): file_path_pairs = None
 
     return render_template(
         "zoom_view.html",
