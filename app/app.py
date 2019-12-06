@@ -96,7 +96,7 @@ def strain():
 
     return render_template(
         'strain.html',
-        strain=df_strain.to_html(header="true", index=False, table_id="microbe_table"),
+        strain=df_strain.to_html(header="true", index=False, table_id="strain_table"),
         strain_form=strain_form,
         strain_del_form=strain_del_form,
     )
@@ -165,7 +165,7 @@ def plasmid():
 
     return render_template(
         'plasmid.html',
-        plasmid=df_plasmid.to_html(header="true", index=False, table_id="microbe_table"),
+        plasmid=df_plasmid.to_html(header="true", index=False, table_id="plasmid_table"),
         plasmid_form=plasmid_form,
         plasmid_del_form=plasmid_del_form,
     )
@@ -235,7 +235,7 @@ def gene():
 
     return render_template(
         'gene.html',
-        gene=df_gene.to_html(header="true", index=False, table_id="microbe_table"),
+        gene=df_gene.to_html(header="true", index=False, table_id="gene_table"),
         gene_form=gene_form,
         gene_del_form=gene_del_form,
     )
@@ -274,7 +274,7 @@ def strain_view(strain_id):
         title="Strain " + str(strain_id),
         zoom_id=strain_id,
         subtitle=description,
-        df_children=df_plasmids.to_html(header="true", index=False),
+        df_children=df_plasmids.to_html(header="true", index=False, table_id="plasmid_table"),
         df_parents=None,
         file_path_pairs=None,
         upload_form=None,
@@ -346,8 +346,8 @@ def plasmid_view(plasmid_id):
         title="Plasmid " + str(plasmid_id),
         zoom_id=plasmid_id,
         subtitle=insert + '; ' + promoter,
-        df_children=df_genes.to_html(header="true", index=False),
-        df_parents=df_strains.to_html(header="true", index=False),
+        df_children=df_genes.to_html(header="true", index=False, table_id="gene_table"),
+        df_parents=df_strains.to_html(header="true", index=False, table_id="strain_table"),
         file_path_pairs=file_path_pairs,
         upload_form=plasmid_file_form,
     )
@@ -409,7 +409,7 @@ def gene_view(gene_id):
         zoom_id=gene_id,
         subtitle=description,
         df_children=None,
-        df_parents=df_plasmids.to_html(header="true", index=False),
+        df_parents=df_plasmids.to_html(header="true", index=False, table_id="plasmid_table"),
         file_path_pairs=file_path_pairs,
         upload_form=gene_file_form,
     )
