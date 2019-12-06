@@ -116,6 +116,18 @@ class MySQLConn():
                 "file_name": file_name,
                 "path": path,
             })
+    
+    def get_file_id(self, path):
+        df_res = self.query_data(
+            "SELECT file_id FROM {db}.files WHERE path = '{path}'".format(
+                db=self.db,
+                path=path,
+            ))
+
+        if len(df_res):
+            return df_res.file_id.values[0]
+        else:
+            return None
 
     def connect_plasmid_file(self, plasmid_id, file_id):
         # if not already connected and file exists, connect

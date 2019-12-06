@@ -27,7 +27,11 @@ bootstrap(DB_NAME)
 db = MySQLConn(app, DB_NAME)
 populate(db)
 
-@app.route('/', methods=("GET", "POST"))
+@app.route('/')
+def index():
+    return redirect("/strain")
+
+@app.route('/strain', methods=("GET", "POST"))
 def strain():
 
     app.logger.debug(db.query_data("SELECT * FROM {db}.strain_plasmid"))
@@ -77,7 +81,7 @@ def strain():
                     app.logger.debug(plasmid_id)
                     db.connect_strain_plasmid(strain_id, plasmid_id)
 
-        return redirect('/')
+        return redirect('/strain')
 
     # delete strain
     strain_del_form = StrainDeleteForm(request.form)
@@ -86,13 +90,13 @@ def strain():
         # remove both strain info and strain -> plasmid info
         for table in ("strain", "strain_plasmid"):
             db.remove_from_table(table, 'strain_id = {}'.format(strain_del_id))
-        return redirect('/')
+        return redirect('/strain')
 
     df_strain = db.query_data("SELECT * FROM {db}.strain")
 
     return render_template(
         'strain.html',
-        strain=df_strain.to_html(header="true", index=False),
+        strain=df_strain.to_html(header="true", index=False, table_id="microbe_table"),
         strain_form=strain_form,
         strain_del_form=strain_del_form,
     )
@@ -144,7 +148,7 @@ def plasmid():
         if len(gene_ids):
             for gene_id in gene_ids:
                 if gene_id.isnumeric():
-                    db.connect_plasmid_gene(plasmid_id, plasmid_id)
+                    db.connect_plasmid_gene(plasmid_id, gene_id)
 
         return redirect('/plasmid')
 
@@ -156,28 +160,14 @@ def plasmid():
         for table in ("plasmid", "strain_plasmid", "plasmid_gene"):
             db.remove_from_table(table, 'plasmid_id = {}'.format(plasmid_del_id))
         return redirect('/plasmid')
-
-    # upload files for plasmid
-    plasmid_file_form = UploadForm(request.form)
-    if plasmid_file_form.validate_on_submit():
-        file_names = request.files.getlist(plasmid_file_form.files.name)
-        all_files = []
-        app.logger.debug(file_names)
-        for _file in file_names:
-            file_name = secure_filename(_file.filename)
-            full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
-            all_files.append(full_path)
-            _file.save(full_path)
-        return redirect('/plasmid')
     
     df_plasmid = db.query_data("SELECT * FROM {db}.plasmid")
 
     return render_template(
         'plasmid.html',
-        plasmid=df_plasmid.to_html(header="true", index=False),
+        plasmid=df_plasmid.to_html(header="true", index=False, table_id="microbe_table"),
         plasmid_form=plasmid_form,
         plasmid_del_form=plasmid_del_form,
-        plasmid_file_form=plasmid_file_form,
     )
 
 @app.route('/gene', methods=("GET", "POST"))
@@ -245,10 +235,9 @@ def gene():
 
     return render_template(
         'gene.html',
-        gene=df_gene.to_html(header="true", index=False),
+        gene=df_gene.to_html(header="true", index=False, table_id="microbe_table"),
         gene_form=gene_form,
         gene_del_form=gene_del_form,
-        gene_file_form=gene_file_form,
     )
 
 @app.route('/strain/<strain_id>', methods=("GET", "POST"))
@@ -258,6 +247,13 @@ def strain_view(strain_id):
     # - table of associated children (plasmids)
     # - table of associated parents (N/A)
     # - list of associated file names and paths (N/A)
+    # - upload form (N/A)
+
+    app.logger.debug(db.query_data("SELECT * FROM {db}.strain_plasmid"))
+
+    valid_ids = db.get_unique_ids("strain")
+    if not strain_id.isnumeric() or int(strain_id) not in valid_ids:
+        return redirect('/strain')
 
     description = db.query_data(
         "SELECT description FROM {db}.strain WHERE strain_id = {id}".format(
@@ -281,6 +277,141 @@ def strain_view(strain_id):
         df_children=df_plasmids.to_html(header="true", index=False),
         df_parents=None,
         file_path_pairs=None,
+        upload_form=None,
+    )
+
+@app.route('/plasmid/<plasmid_id>', methods=("GET", "POST"))
+def plasmid_view(plasmid_id):
+    # deliver:
+    # - id and subtitle (insert, promoter)
+    # - table of associated children (genes)
+    # - table of associated parents (strains)
+    # - list of associated file names and paths
+    # - upload form
+
+    valid_ids = db.get_unique_ids("plasmid")
+    if not plasmid_id.isnumeric() or int(plasmid_id) not in valid_ids:
+        return redirect('/plasmid')
+
+    # upload files for plasmid
+    plasmid_file_form = UploadForm(request.form)
+    if plasmid_file_form.validate_on_submit():
+        file_names = request.files.getlist(plasmid_file_form.files.name)
+        for _file in file_names:
+            file_name = secure_filename(_file.filename)
+            full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+            _file.save(full_path)
+            db.add_file(file_name, full_path)
+            file_id = db.get_file_id(full_path)
+            db.connect_plasmid_file(plasmid_id, file_id)
+        return redirect('/plasmid/{id}'.format(id=plasmid_id))
+
+    df_res = db.query_data(
+        "SELECT _insert, promoter FROM {db}.plasmid WHERE plasmid_id = {id}".format(
+            db=db.db,
+            id=plasmid_id,
+        ))
+    insert = df_res._insert.values[0]
+    promoter = df_res.promoter.values[0]
+    
+    df_strains = db.query_data("""
+        SELECT * FROM {db}.strain
+        WHERE strain_id IN (
+            SELECT strain_id FROM {db}.strain_plasmid
+            WHERE plasmid_id = {id}
+        )
+    """.format(db=db.db, id=plasmid_id))
+
+    df_genes = db.query_data("""
+        SELECT * FROM {db}.gene
+        WHERE gene_id IN (
+            SELECT gene_id FROM {db}.plasmid_gene
+            WHERE plasmid_id = {id}
+        )
+    """.format(db=db.db, id=plasmid_id))
+
+    df_files = db.query_data("""
+        SELECT * FROM {db}.files
+        WHERE file_id IN (
+            SELECT file_id FROM {db}.plasmid_files
+            WHERE plasmid_id = {id}
+        )
+    """.format(db=db.db, id=plasmid_id))
+    files = df_files.file_name.tolist()
+    paths = df_files.path.tolist()
+    file_path_pairs = [(f, p) for f, p in zip(files, paths)]
+
+    return render_template(
+        "zoom_view.html",
+        title="Plasmid " + str(plasmid_id),
+        zoom_id=plasmid_id,
+        subtitle=insert + '; ' + promoter,
+        df_children=df_genes.to_html(header="true", index=False),
+        df_parents=df_strains.to_html(header="true", index=False),
+        file_path_pairs=file_path_pairs,
+        upload_form=plasmid_file_form,
+    )
+
+@app.route('/gene/<gene_id>', methods=("GET", "POST"))
+def gene_view(gene_id):
+    # deliver:
+    # - id and subtitle (description)
+    # - table of associated children (N/A)
+    # - table of associated parents (plasmids)
+    # - list of associated file names and paths
+    # - upload form
+
+    valid_ids = db.get_unique_ids("gene")
+    if not gene_id.isnumeric() or int(gene_id) not in valid_ids:
+        return redirect('/gene')
+
+    # upload files for gene
+    gene_file_form = UploadForm(request.form)
+    if gene_file_form.validate_on_submit():
+        file_names = request.files.getlist(gene_file_form.files.name)
+        for _file in file_names:
+            file_name = secure_filename(_file.filename)
+            full_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+            _file.save(full_path)
+            db.add_file(file_name, full_path)
+            file_id = db.get_file_id(full_path)
+            db.connect_gene_file(gene_id, file_id)
+        return redirect('/gene/{id}'.format(id=gene_id))
+
+    description = db.query_data(
+        "SELECT description FROM {db}.gene WHERE gene_id = {id}".format(
+            db=db.db,
+            id=gene_id,
+        )).description.values[0]
+    
+    df_plasmids = db.query_data("""
+        SELECT * FROM {db}.plasmid
+        WHERE plasmid_id IN (
+            SELECT plasmid_id FROM {db}.plasmid_gene
+            WHERE gene_id = {id}
+        )
+    """.format(db=db.db, id=gene_id))
+
+    df_files = db.query_data("""
+        SELECT * FROM {db}.files
+        WHERE file_id IN (
+            SELECT file_id FROM {db}.gene_files
+            WHERE gene_id = {id}
+        )
+    """.format(db=db.db, id=gene_id))
+    files = df_files.file_name.tolist()
+    paths = df_files.path.tolist()
+    file_path_pairs = [(f, p) for f, p in zip(files, paths)]
+
+    return render_template(
+        "zoom_view.html",
+        title="Gene  " + str(gene_id),
+        zoom_id=gene_id,
+        subtitle=description,
+        df_children=None,
+        df_parents=df_plasmids.to_html(header="true", index=False),
+        file_path_pairs=file_path_pairs,
+        upload_form=gene_file_form,
     )
 
 if __name__ == '__main__':

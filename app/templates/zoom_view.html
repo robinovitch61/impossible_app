@@ -12,9 +12,12 @@
 
     <section class="files">
         {% if file_path_pairs is not none %}
-            {% for file in file_path_pairs %}
-                <a href=#>{{ file[0] }}</a>
-            {% endfor %}
+            <h3>Associated Files:</h3>
+            <ul>
+                {% for file in file_path_pairs %}
+                <li><a href=#>{{ file[0] }}</a></li>
+                {% endfor %}
+            </ul>
         {% endif %}
     </section>
 
@@ -33,4 +36,10 @@
             </div>
         {% endif %}
     </section>
+
+    {% if upload_form is not none %}
+    <section class="upload">
+        {% include 'upload_form.html' %}
+    </section>
+    {% endif %}
 {% endblock %}

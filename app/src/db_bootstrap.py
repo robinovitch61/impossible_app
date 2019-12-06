@@ -185,15 +185,24 @@ def populate(db):
     if not db.exists("strain_plasmid"):
         # randomly connect each strain with 2 to NUM_PLASMIDS plasmids
         for strain_id in range(NUM_STRAINS):
-            for plasmid_id in range(random.randint(2, NUM_PLASMIDS)):
+            plasmid_ids = []
+            for _ in range(random.randint(0, NUM_PLASMIDS)):
+                plasmid_id = random.randint(0, NUM_PLASMIDS)
+                while plasmid_id in plasmid_ids:
+                    plasmid_id = random.randint(0, NUM_PLASMIDS)
+                plasmid_ids.append(plasmid_id)
                 db.connect_strain_plasmid(strain_id, plasmid_id)
-
 
     if not db.exists("plasmid_gene"):
         # randomly connect each plasmid with 2 to NUM_GENES genes
         for plasmid_id in range(NUM_PLASMIDS):
-            for gene_id in range(random.randint(2, NUM_GENES)):
-                db.connect_strain_plasmid(plasmid_id, gene_id)
+            gene_ids = []
+            for _ in range(random.randint(0, NUM_GENES)):
+                gene_id = random.randint(0, NUM_GENES)
+                while gene_id in gene_ids:
+                    gene_id = random.randint(0, NUM_GENES)
+                gene_ids.append(gene_id)
+                db.connect_plasmid_gene(plasmid_id, gene_id)
     
     if not db.exists('files'):
         for path in DEFAULT_FILENAMES:
