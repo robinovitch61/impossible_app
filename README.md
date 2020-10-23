@@ -2,6 +2,8 @@
 
 ***
 
+This was a take home assignment I got in 2019 for Impossible Foods that I had a few days to complete.
+
 #### Navigate and edit microbial strains, plasmids, and genes with a Flask web UI and MySQL database.
 
 ---
