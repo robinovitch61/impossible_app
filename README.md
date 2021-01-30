@@ -43,7 +43,7 @@ This was a take home assignment I got in 2019 for Impossible Foods that I had a 
    * **NOTE**: this script includes `docker system prune -f`, which [removes unused data](https://docs.docker.com/engine/reference/commandline/system_prune/). Comment this out if you'd like to keep your currently unused containers, images, and volumes.
 
 4) Wait ~1min for startup. Then navigate to [http://localhost:5000/](http://localhost:5000/) and have a blast.
-* If there are any startup issues, use `docker logs -f app` to view possible errors. Contact leorobinovitch@gmail.com with any questions.
+* If there are any startup issues, use `docker logs -f app` to view possible errors.
 
 ## Improvements/Next Steps:
 
